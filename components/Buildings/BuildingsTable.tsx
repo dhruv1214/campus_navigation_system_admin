@@ -14,27 +14,39 @@ import {
     DropdownMenu,
     DropdownItem,
     Chip,
-    User,
     Pagination,
     Selection,
     ChipProps,
     SortDescriptor, Tooltip
 } from "@nextui-org/react";
-import {columns, users, statusOptions} from "./BuildingsTableData";
+import {buildingsNames, columns, locations, statusOptions} from "./BuildingsTableData";
 import {capitalize} from "./BuildingsTableUtils";
 import {VerticalDotsIcon, ChevronDownIcon, PlusIcon, SearchIcon} from "@/components/Buildings/BuildingsTableIcons";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import AddButton from "@/components/Buildings/AddButton";
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-    active: "success",
-    paused: "danger",
-    vacation: "warning",
-};
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "building.name", "floor", "roomNumber", "actions"];
 
-type User = typeof users[0];
+
+const colors = [
+    "default",
+    "primary",
+    "secondary",
+    "success",
+    "warning",
+    "error",
+    "info",
+];
+
+const statusColorMap: Record<string, ChipProps["color"]> = buildingsNames.reduce(
+    (acc, name, index) => ({
+        ...acc,
+        [name]: colors[index % colors.length],
+    }),
+    {},
+);
+type Location = typeof locations[0];
 
 export default function BuildingsTable() {
     const [filterValue, setFilterValue] = React.useState("");
@@ -48,31 +60,31 @@ export default function BuildingsTable() {
     });
     const [page, setPage] = React.useState(1);
 
-    const pages = Math.ceil(users.length / rowsPerPage);
+    const pages = Math.ceil(locations.length / rowsPerPage);
 
     const hasSearchFilter = Boolean(filterValue);
 
     const headerColumns = React.useMemo(() => {
         if (visibleColumns === "all") return columns;
 
-        return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+        return columns.filter((column) => Array.from(visibleColumns).includes(column.id));
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = [...users];
+        let filteredLocations = [...locations];
 
         if (hasSearchFilter) {
-            filteredUsers = filteredUsers.filter((user) =>
+            filteredLocations = filteredLocations.filter((user) =>
                 user.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
-        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-            filteredUsers = filteredUsers.filter((user) =>
-                Array.from(statusFilter).includes(user.status),
+        if (statusFilter !== "all") {
+            filteredLocations = filteredLocations.filter((location) =>
+                statusFilter.has(location.building.name)
             );
         }
 
-        return filteredUsers;
+        return filteredLocations;
     }, [filterValue, statusFilter, hasSearchFilter]);
 
     const items = React.useMemo(() => {
@@ -83,48 +95,64 @@ export default function BuildingsTable() {
     }, [page, filteredItems, rowsPerPage]);
 
     const sortedItems = React.useMemo(() => {
-        return [...items].sort((a: User, b: User) => {
-            const first = a[sortDescriptor.column as keyof User] as number;
-            const second = b[sortDescriptor.column as keyof User] as number;
+        return [...items].sort((a: Location, b: Location) => {
+            const first = a[sortDescriptor.column as keyof Location] as number;
+            const second = b[sortDescriptor.column as keyof Location] as number;
             const cmp = first < second ? -1 : first > second ? 1 : 0;
 
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [items, sortDescriptor.column, sortDescriptor.direction]);
 
-    const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-        const cellValue = user[columnKey as keyof User];
+    const renderCell = React.useCallback((location: any, columnKey: any) => {
+        let cellValue;
+
+
+        if (columnKey.includes('.')) {
+            // Handle nested properties, e.g. building.name
+            const keys = columnKey.split('.');
+            cellValue = location[keys[0]][keys[1]];
+        } else {
+            cellValue = location[columnKey];
+        }
+
+        console.log({location, columnKey, cellValue});
 
         switch (columnKey) {
-            case "name":
-                return (
-                    <User
-                        avatarProps={{radius: "full", size: "sm", src: user.avatar}}
-                        classNames={{
-                            description: "text-default-500",
-                        }}
-                        description={user.email}
-                        name={cellValue}
-                    >
-                        {user.email}
-                    </User>
-                );
-            case "role":
+            case "_id":
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-small capitalize">{cellValue}</p>
-                        <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p>
+                        <p className="text-bold text-tiny capitalize text-default-500">{location._id}</p>
                     </div>
                 );
-            case "status":
+            case "building.name":
                 return (
                     <Chip
                         className="capitalize border-none gap-1 text-default-600"
-                        color={statusColorMap[user.status]}
+                        color={statusColorMap[location.building.name]}
                         size="sm"
                         variant="dot">
                         {cellValue}
                     </Chip>
+                );
+            case "name":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                    </div>
+                );
+            case "roomNumber":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                    </div>
+                );
+            case "floor":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                    </div>
                 );
             case "actions":
                 return (
@@ -205,8 +233,7 @@ export default function BuildingsTable() {
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button
                                     endContent={<ChevronDownIcon className="text-small"/>}
-                                    variant="flat"
-                                >
+                                    variant="flat">
                                     Status
                                 </Button>
                             </DropdownTrigger>
@@ -216,11 +243,10 @@ export default function BuildingsTable() {
                                 closeOnSelect={false}
                                 selectedKeys={statusFilter}
                                 selectionMode="multiple"
-                                onSelectionChange={setStatusFilter}
-                            >
+                                onSelectionChange={setStatusFilter}>
                                 {statusOptions.map((status) => (
-                                    <DropdownItem key={status.uid} className="capitalize">
-                                        {capitalize(status.name)}
+                                    <DropdownItem key={status.label} className="capitalize">
+                                        {capitalize(status.value)}
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>
@@ -241,7 +267,7 @@ export default function BuildingsTable() {
                                 selectionMode="multiple"
                                 onSelectionChange={setVisibleColumns}>
                                 {columns.map((column) => (
-                                    <DropdownItem key={column.uid} className="capitalize">
+                                    <DropdownItem key={column.id} className="capitalize">
                                         {capitalize(column.name)}
                                     </DropdownItem>
                                 ))}
@@ -251,7 +277,7 @@ export default function BuildingsTable() {
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <span className="text-default-400 text-small">Total {users.length} users</span>
+                    <span className="text-default-400 text-small">Total {34} locations</span>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
                         <select
@@ -329,25 +355,26 @@ export default function BuildingsTable() {
             topContent={topContent}
             topContentPlacement="outside"
             onSelectionChange={setSelectedKeys}
-            onSortChange={setSortDescriptor}
-        >
+            onSortChange={setSortDescriptor}>
             <TableHeader columns={headerColumns}>
                 {(column) => (
                     <TableColumn
-                        key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
-                        allowsSorting={column.sortable}
-                    >
+                        key={column.id}
+                        align={column.id === "actions" ? "end" : "start"}
+                        allowsSorting={column.sortable}>
                         {column.name}
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={"No users found"} items={sortedItems}>
+            <TableBody emptyContent={"No locations found"} items={sortedItems}>
                 {(item) => (
-                    <TableRow key={item.id}>
-                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                    </TableRow>
-                )}
+                        <TableRow key={item.name}>
+                            {(columnKey) => {
+                                return (<TableCell>{renderCell(item, columnKey)}</TableCell>)
+                            }}
+                        </TableRow>
+                    )
+                }
             </TableBody>
         </Table>
     );
