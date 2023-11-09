@@ -1,12 +1,16 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-    name: "Next.js + NextUI",
+    name: "Admin Panel- Campus Navigation System",
     description: "Make beautiful websites regardless of your design experience.",
     navItems: [
         {
             label: "Home",
             href: "/",
+        },
+        {
+            label: "Buildings",
+            href: "/buildings",
         },
         {
             label: "Docs",
