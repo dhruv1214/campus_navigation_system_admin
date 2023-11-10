@@ -135,4 +135,4 @@ const locations = [
 const buildingsNames = buildings.map(building => building.name);
 
 
-export {columns, locations, statusOptions, buildingsNames};
+export {columns, locations, statusOptions, buildingsNames, buildings};

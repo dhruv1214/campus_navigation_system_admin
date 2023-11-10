@@ -5,7 +5,7 @@ export const primaryButton = tv({
 	variants: {
 		color: {
 			violet: "bg-violet-500 hover:bg-violet-600",
-			yellow: "bg-yellow-500 hover:bg-yellow-600",
+			yellow: "bg-amber-600 hover:bg-amber-700",
 			blue: "bg-blue-500 hover:bg-blue-600",
 			cyan: "bg-cyan-500 hover:bg-cyan-600",
 			green: "bg-green-500 hover:bg-green-600",

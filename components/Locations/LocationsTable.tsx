@@ -24,6 +24,7 @@ import {capitalize} from "./LocationsTableUtils";
 import {VerticalDotsIcon, ChevronDownIcon, PlusIcon, SearchIcon} from "@/components/icons";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import AddButton from "@/components/Locations/AddButton";
+import {Link} from "@nextui-org/link";
 
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "building.name", "floor", "roomNumber", "actions"];
@@ -49,6 +50,8 @@ const statusColorMap: Record<string, ChipProps["color"]> = buildingsNames.reduce
 type Location = typeof locations[0];
 
 export default function LocationsTable() {
+
+    /** State **/
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -104,6 +107,9 @@ export default function LocationsTable() {
         });
     }, [items, sortDescriptor.column, sortDescriptor.direction]);
 
+    /** End State **/
+
+    /*** Callbacks ***/
     const renderCell = React.useCallback((location: any, columnKey: any) => {
         let cellValue;
 
@@ -210,14 +216,14 @@ export default function LocationsTable() {
     const topContent = React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3 items-end">
+                <div className="flex justify-between gap-3 items-center">
                     <Input
                         isClearable
                         classNames={{
                             base: "w-full sm:max-w-[44%]",
                             inputWrapper: "border-1",
                         }}
-                        placeholder="Search by name..."
+                        placeholder="Search by location name..."
                         size="sm"
                         startContent={<SearchIcon className="text-default-300"/>}
                         value={filterValue}
@@ -226,6 +232,12 @@ export default function LocationsTable() {
                         onValueChange={onSearchChange}
                     />
                     <div className="flex gap-3">
+                        <Link
+                            className="hidden sm:flex"
+                            color="secondary"
+                            href="locations/Buildings">
+                            Buildings
+                        </Link>
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button
@@ -316,7 +328,7 @@ export default function LocationsTable() {
 
     const classNames = React.useMemo(
         () => ({
-            wrapper: ["max-h-[382px]", "max-w-3xl"],
+            wrapper: ["max-h-[382px]", "overflow-y-auto"],
             th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
             td: [
                 // changing the rows border radius
@@ -335,8 +347,6 @@ export default function LocationsTable() {
 
     return (
         <Table
-            isCompact
-            removeWrapper
             aria-label="Locations Table"
             bottomContent={bottomContent}
             bottomContentPlacement="outside"

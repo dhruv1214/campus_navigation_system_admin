@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import BuildingForm from "@/components/Buildings/BuildingForm";
+import LocationForm from "@/components/Locations/LocationForm";
 
 
 export default function Page() {
@@ -11,7 +11,7 @@ export default function Page() {
     return (
         <div>
             <title>Add Location</title>
-            <BuildingForm onSubmit={handleSubmit} />
+            <LocationForm onSubmit={handleSubmit} />
         </div>
     );
 }
