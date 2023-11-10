@@ -26,6 +26,7 @@ const BuildingForm = (props: BuildingFormProps) => {
 
 
                 <Input
+                    isRequired
                     label="Name"
                     placeholder="Enter the name of the building"
                     value={name}
