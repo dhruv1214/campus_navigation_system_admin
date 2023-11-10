@@ -1,8 +1,10 @@
 import React from "react";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
-import {PlusIcon} from "@/components/Buildings/BuildingsTableIcons";
+import {PlusIcon} from "@/components/icons";
 
 export default function AddButton() {
+
+
     return (
         <Dropdown>
             <DropdownTrigger>
@@ -13,8 +15,8 @@ export default function AddButton() {
                 </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
-                <DropdownItem key="new">Building</DropdownItem>
-                <DropdownItem key="copy">Location</DropdownItem>
+                <DropdownItem key="building" href="/locations/Buildings/add">Building</DropdownItem>
+                <DropdownItem key="location" href="/locations/add">Location</DropdownItem>
             </DropdownMenu>
         </Dropdown>
     );

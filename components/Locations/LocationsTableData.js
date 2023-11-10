@@ -51,7 +51,7 @@ const buildings = [
 ];
 
 
-// Add all buildings to the status options at the top of the page and only add unique buildings
+// Page all locations to the status options at the top of the page and only add unique locations
 const statusOptions =[
     {
         value: 'all',

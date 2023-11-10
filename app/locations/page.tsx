@@ -1,13 +1,12 @@
-import {title} from "@/components/primitives";
 import React from "react";
-import BuildingsTable from "@/components/Buildings/BuildingsTable";
+import LocationTable from "@/components/Locations/LocationsTable";
 
 
 export default function BuildingsPage() {
     return (
         <div>
             <title>Buildings</title>
-            <BuildingsTable />
+            <LocationTable />
         </div>
     );
 }

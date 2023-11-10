@@ -19,11 +19,11 @@ import {
     ChipProps,
     SortDescriptor, Tooltip
 } from "@nextui-org/react";
-import {buildingsNames, columns, locations, statusOptions} from "./BuildingsTableData";
-import {capitalize} from "./BuildingsTableUtils";
-import {VerticalDotsIcon, ChevronDownIcon, PlusIcon, SearchIcon} from "@/components/Buildings/BuildingsTableIcons";
+import {buildingsNames, columns, locations, statusOptions} from "./LocationsTableData";
+import {capitalize} from "./LocationsTableUtils";
+import {VerticalDotsIcon, ChevronDownIcon, PlusIcon, SearchIcon} from "@/components/icons";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import AddButton from "@/components/Buildings/AddButton";
+import AddButton from "@/components/Locations/AddButton";
 
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "building.name", "floor", "roomNumber", "actions"];
@@ -48,7 +48,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = buildingsNames.reduce
 );
 type Location = typeof locations[0];
 
-export default function BuildingsTable() {
+export default function LocationsTable() {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -74,8 +74,8 @@ export default function BuildingsTable() {
         let filteredLocations = [...locations];
 
         if (hasSearchFilter) {
-            filteredLocations = filteredLocations.filter((user) =>
-                user.name.toLowerCase().includes(filterValue.toLowerCase()),
+            filteredLocations = filteredLocations.filter((location) =>
+                location.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
         if (statusFilter !== "all") {
@@ -116,14 +116,11 @@ export default function BuildingsTable() {
             cellValue = location[columnKey];
         }
 
-        console.log({location, columnKey, cellValue});
-
         switch (columnKey) {
             case "_id":
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-small capitalize">{cellValue}</p>
-                        <p className="text-bold text-tiny capitalize text-default-500">{location._id}</p>
                     </div>
                 );
             case "building.name":
@@ -340,7 +337,7 @@ export default function BuildingsTable() {
         <Table
             isCompact
             removeWrapper
-            aria-label="Example table with custom cells, pagination and sorting"
+            aria-label="Locations Table"
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
             checkboxesProps={{
@@ -350,7 +347,7 @@ export default function BuildingsTable() {
             }}
             classNames={classNames}
             selectedKeys={selectedKeys}
-            selectionMode="multiple"
+            selectionMode="none"
             sortDescriptor={sortDescriptor}
             topContent={topContent}
             topContentPlacement="outside"
