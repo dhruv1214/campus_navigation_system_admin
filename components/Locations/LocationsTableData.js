@@ -1,7 +1,7 @@
 import React from "react";
 // Columns for Location data with reference to Building
 const columns = [
-    {name: "ID", id: "_id", sortable: true},
+    {name: "ID", id: "locationId", sortable: true},
     {name: "Building Name", id: "building.name", sortable: true},
     {name: "Location Name", id: "name", sortable: true},
     {name: "Floor", id: "floor", sortable: true},
@@ -9,4 +9,17 @@ const columns = [
     {name: "ACTIONS", id: "actions"},
 ];
 
-export {columns};
+
+
+const INITIAL_VISIBLE_COLUMNS = ["name", "building.name", "floor", "roomNumber", "actions"];
+
+const colors = [
+    "primary",
+    "secondary",
+    "success",
+    "warning",
+    "error",
+    "info",
+];
+
+export {columns, colors, INITIAL_VISIBLE_COLUMNS};

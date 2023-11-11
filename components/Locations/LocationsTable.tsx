@@ -19,37 +19,20 @@ import {
     ChipProps,
     SortDescriptor, Tooltip
 } from "@nextui-org/react";
-import {columns} from "./LocationsTableData";
+import {columns, colors, INITIAL_VISIBLE_COLUMNS} from "./LocationsTableData";
 import {capitalize} from "./LocationsTableUtils";
-import {VerticalDotsIcon, ChevronDownIcon, PlusIcon, SearchIcon} from "@/components/icons";
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
+import {VerticalDotsIcon, ChevronDownIcon, SearchIcon} from "@/components/icons";
+import {DeleteIcon, EditIcon} from "@nextui-org/shared-icons";
 import AddButton from "@/components/AddButton";
 import {Link} from "@nextui-org/link";
 import useGetLocations from "@/hooks/locations/useGetLocations";
 import Loading from "@/components/loading";
 import useGetBuildings from "@/hooks/buildings/useGetBuildings";
-import Building from "@/models/Building";
-
-
-const INITIAL_VISIBLE_COLUMNS = ["name", "building.name", "floor", "roomNumber", "actions"];
-
-
-const colors = [
-    "default",
-    "primary",
-    "secondary",
-    "success",
-    "warning",
-    "error",
-    "info",
-];
 
 export default function LocationsTable() {
 
     const {locations, isLoading, error} = useGetLocations();
     const {buildings} = useGetBuildings();
-
-    console.log({buildings})
 
     type Location = typeof locations[0];
 
@@ -133,10 +116,10 @@ export default function LocationsTable() {
         }
 
         switch (columnKey) {
-            case "_id":
+            case "locationId":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                        <p className="text-small text-default-300">{cellValue.split("-")[0]}...</p>
                     </div>
                 );
             case "building.name":
@@ -172,7 +155,7 @@ export default function LocationsTable() {
                     <div>
                         <div className="hidden relative md:flex items-center gap-2">
                             <Tooltip content="Edit">
-                              <Link className="text-lg text-default-400 cursor-pointer active:opacity-50" href={`/locations/${location._id}/edit`}>
+                              <Link className="text-lg text-default-400 cursor-pointer active:opacity-50" href={`/locations/${location.locationId}/edit`}>
                                 <EditIcon/>
                               </Link>
                             </Tooltip>
@@ -200,7 +183,7 @@ export default function LocationsTable() {
             default:
                 return cellValue;
         }
-    }, []);
+    }, [statusColorMap]);
 
 
     const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -258,7 +241,7 @@ export default function LocationsTable() {
                                 selectionMode="multiple"
                                 onSelectionChange={setStatusFilter}>
                                 {buildings.map((building: any) => (
-                                    <DropdownItem key={building._id} className="capitalize">
+                                    <DropdownItem key={building.locationId} className="capitalize">
                                         {capitalize(building.name)}
                                     </DropdownItem>
                                 ))}

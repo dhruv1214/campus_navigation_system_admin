@@ -9,8 +9,6 @@ import {
 import {primaryButton, subtitle, title} from "@/components/primitives";
 import {LocationFormValues} from "@/hooks/locations/useAddLocation";
 import useGetBuildings from "@/hooks/buildings/useGetBuildings";
-import BuildingForm from "@/components/Buildings/BuildingForm";
-import building from "@/models/Building";
 
 interface LocationFormProps {
     buildingLocation?: BuildingLocation;
@@ -23,8 +21,6 @@ const LocationForm = (props: LocationFormProps) => {
 
     const [name, setName] = useState(props.buildingLocation?.name || "");
     const [description, setDescription] = useState(props.buildingLocation?.description || "");
-    const [latitude, setLatitude] = useState(props.buildingLocation?.location.coordinates[0] || "0");
-    const [longitude, setLongitude] = useState(props.buildingLocation?.location.coordinates[1] || "0");
     const [floor, setFloor] = useState(props.buildingLocation?.floor || 1);
     const [roomNumber, setRoomNumber] = useState(props.buildingLocation?.roomNumber || "");
     const [buildingId, setBuildingId] = useState<string>(buildings[0]?.buildingId || "");
@@ -32,17 +28,9 @@ const LocationForm = (props: LocationFormProps) => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const lat = Number(latitude);
-        const long = Number(longitude);
-
-        console.log(buildings);
-        console.log(buildingId);
-
         const formValues: LocationFormValues = {
             name,
             description,
-            latitude: lat,
-            longitude: long,
             floor,
             roomNumber,
             buildingId

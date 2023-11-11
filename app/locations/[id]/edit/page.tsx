@@ -36,9 +36,6 @@ export default function Page({params}: { params: { id: string } }) {
     const buildingLocation:BuildingLocation = {
         name: location.name,
         description: location.description,
-        location: {
-            coordinates: [location.location.coordinates[0], location.location.coordinates[1]]
-        },
         floor: location.floor,
         roomNumber: location.roomNumber,
         buildingId: location.buildingId

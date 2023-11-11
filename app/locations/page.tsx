@@ -5,7 +5,7 @@ import LocationTable from "@/components/Locations/LocationsTable";
 export default function BuildingsPage() {
     return (
         <div>
-            <title>Buildings</title>
+            <title>Locations</title>
             <LocationTable />
         </div>
     );
