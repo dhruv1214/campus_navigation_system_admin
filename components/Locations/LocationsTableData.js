@@ -13,7 +13,7 @@ const columns = [
 // Example data array for Buildings
 const buildings = [
     {
-        _id: 'Doon',
+        _id: 'asd2312',
         name: 'Liberty Tower',
         description: 'A modern office skyscraper in the heart of downtown.',
         location: {
@@ -22,7 +22,7 @@ const buildings = [
         imageURL: '/images/liberty-tower.jpg'
     },
     {
-        _id: 'Empire State Building',
+        _id: 'sdfsa123123',
         name: 'Empire State Building',
         description: 'A 102-story skyscraper located in Midtown Manhattan.',
         location: {
@@ -31,7 +31,7 @@ const buildings = [
         imageURL: '/images/empire-state-building.jpg'
     },
     {
-        _id: 'DownTown',
+        _id: 'dsfehgsr5634534',
         name: 'downtown',
         description: 'A 102-story skyscraper located in Midtown Manhattan.',
         location: {
@@ -40,7 +40,7 @@ const buildings = [
         imageURL: '/images/empire-state-building.jpg'
     },
     {
-        _id: 'The White House',
+        _id: 'dfgu67845634',
         name: 'The White House',
         description: 'The official residence and workplace of the president of the United States.',
         location: {

@@ -13,6 +13,7 @@ import {
 import {buildings} from "@/components/Locations/LocationsTableData";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import {VerticalDotsIcon} from "@/components/icons";
+import {Link} from "@nextui-org/link";
 
 const columns = [
     {key: 'name', label: 'Name'},
@@ -25,27 +26,24 @@ export default function BuildingsTable() {
     const renderCell = (item: any, column: any) => {
         const cellValue = item[column.key];
 
+        const id = getKeyValue(item, '_id');
+
         switch (column.key) {
             case 'Action':
                 return (
                     <TableCell key={column.key} align="center">
-                    <div className="relative flex items-center gap-2">
-                        <Tooltip content="Details">
-                              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                <EyeIcon/>
-                              </span>
-                        </Tooltip>
-                        <Tooltip content="Edit user">
-                              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                <EditIcon/>
-                              </span>
-                        </Tooltip>
-                        <Tooltip color="danger" content="Delete user">
+                        <div className="relative flex items-center gap-2">
+                            <Tooltip content="Edit user">
+                                <Link className="text-lg text-default-400 cursor-pointer active:opacity-50" href={`Buildings/${id}`}>
+                                    <EditIcon/>
+                                </Link>
+                            </Tooltip>
+                            <Tooltip color="danger" content="Delete user">
                               <span className="text-lg text-danger cursor-pointer active:opacity-50">
                                 <DeleteIcon/>
                               </span>
-                        </Tooltip>
-                    </div>
+                            </Tooltip>
+                        </div>
                     </TableCell>
                 );
             default:
@@ -55,6 +53,12 @@ export default function BuildingsTable() {
                     </TableCell>
                 );
         }
+
+    }
+
+    const handleEdit = (item: any) => {
+        console.log(item);
+
 
     }
 
