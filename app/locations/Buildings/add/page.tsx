@@ -4,6 +4,7 @@ import BuildingForm from "@/components/Buildings/BuildingForm";
 import useAddBuilding, {BuildingFormValues} from "@/hooks/buildings/useAddBuiling";
 import {Spinner} from "@nextui-org/react";
 import {useRouter} from "next/navigation";
+import Loading from "@/components/loading";
 
 
 export default function Page() {
@@ -19,11 +20,7 @@ export default function Page() {
     }
 
     if (isLoading) {
-        return (
-            <div>
-                <Spinner color="secondary" label="Loading..." labelColor="secondary" />
-            </div>
-        );
+        return (<Loading />);
     }
 
     if (error) {
