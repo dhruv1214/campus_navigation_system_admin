@@ -5,7 +5,7 @@ import {primaryButton, subtitle, title} from "@/components/primitives";
 import {BuildingFormValues} from "@/hooks/buildings/useAddBuiling";
 
 interface BuildingFormProps {
-    building?: Building;
+    building: Building | null;
     onSubmit: (formValues: BuildingFormValues) => void;
 }
 
@@ -13,27 +13,19 @@ const BuildingForm = (props: BuildingFormProps) => {
 
     const [name, setName] = useState(props.building?.name || "");
     const [description, setDescription] = useState(props.building?.description || "");
-    const [latitude, setLatitude] = useState(props.building?.location.coordinates[0] || 0);
-    const [longitude, setLongitude] = useState(props.building?.location.coordinates[1] || 0);
     const [imageURL, setImageURL] = useState(props.building?.imageURL || "");
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         // Validate the form values
-        if (!name || !description || !latitude || !longitude || !imageURL) {
-            return;
-        }
-
-        if (latitude < -90 || latitude > 90) {
+        if (!name || !description || !imageURL) {
             return;
         }
 
         const formValues: BuildingFormValues = {
             name,
             description,
-            latitude,
-            longitude,
             imageURL
         };
 
@@ -59,26 +51,6 @@ const BuildingForm = (props: BuildingFormProps) => {
                     value={description}
                     onValueChange={setDescription}
                 />
-
-
-                <div className={"flex flex-row gap-4"}>
-                    <Input
-                        id="txtLatitude"
-                        label="Latitude"
-                        labelPlacement="outside"
-                        placeholder="Enter the latitude of the building"
-                        type="number"
-                        value={latitude.toString()}
-                        onValueChange={(value) => setLatitude(Number(value))}/>
-                    <Input
-                        id="txtLongitude"
-                        label="Longitude"
-                        labelPlacement="outside"
-                        type="number"
-                        placeholder="Enter the longitude of the building"
-                        value={longitude.toString()}
-                        onValueChange={(value) => setLongitude(Number(value))}/>
-                </div>
 
                 <Input
                     label="Image URL"

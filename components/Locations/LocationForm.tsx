@@ -1,22 +1,65 @@
-import React, {useState} from "react";
-import {Button, Input, Select, SelectItem, Textarea} from "@nextui-org/react";
+import React, {useEffect, useState} from "react";
+import {
+    Button,
+    Input,
+    Select,
+    SelectItem,
+    Textarea
+} from "@nextui-org/react";
 import {primaryButton, subtitle, title} from "@/components/primitives";
-import {buildings} from "@/components/Locations/LocationsTableData";
+import {LocationFormValues} from "@/hooks/locations/useAddLocation";
+import useGetBuildings from "@/hooks/buildings/useGetBuildings";
+import BuildingForm from "@/components/Buildings/BuildingForm";
+import building from "@/models/Building";
 
 interface LocationFormProps {
     buildingLocation?: BuildingLocation;
-    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: (formValues: LocationFormValues) => void;
 }
 
 const LocationForm = (props: LocationFormProps) => {
 
+    const {buildings} = useGetBuildings();
+
     const [name, setName] = useState(props.buildingLocation?.name || "");
     const [description, setDescription] = useState(props.buildingLocation?.description || "");
-    const [latitude, setLatitude] = useState(props.buildingLocation?.location.coordinates[0] || 0);
-    const [longitude, setLongitude] = useState(props.buildingLocation?.location.coordinates[1] || 0);
+    const [latitude, setLatitude] = useState(props.buildingLocation?.location.coordinates[0] || "0");
+    const [longitude, setLongitude] = useState(props.buildingLocation?.location.coordinates[1] || "0");
     const [floor, setFloor] = useState(props.buildingLocation?.floor || 1);
     const [roomNumber, setRoomNumber] = useState(props.buildingLocation?.roomNumber || "");
+    const [buildingId, setBuildingId] = useState<string>(buildings[0]?.buildingId || "");
 
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const lat = Number(latitude);
+        const long = Number(longitude);
+
+        console.log(buildings);
+        console.log(buildingId);
+
+        const formValues: LocationFormValues = {
+            name,
+            description,
+            latitude: lat,
+            longitude: long,
+            floor,
+            roomNumber,
+            buildingId
+        }
+
+        props.onSubmit(formValues);
+    }
+
+    useEffect(() => {
+        if(buildings.length > 0) {
+            setBuildingId(buildings[0].buildingId);
+        }
+    }, [buildings])
+
+    const handleBuildingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setBuildingId(event.target.value);
+    }
 
     return (
         <div className={"flex flex-col max-w-md mx-auto"}>
@@ -24,13 +67,15 @@ const LocationForm = (props: LocationFormProps) => {
             <h1 className={title({color: 'yellow'})}>{props.buildingLocation ? "Edit Location" : "Add Location"}</h1>
             <span className={subtitle({fullWidth: true})}>Fill in the form below to {props.buildingLocation ? "edit" : "add"} a building.</span>
 
-            <form onSubmit={props.onSubmit} className={"flex flex-col gap-4 mt-5"}>
+            <form onSubmit={handleSubmit} className={"flex flex-col gap-4 mt-5"}>
                 <Select
                     isRequired
                     label="Building"
+                    selectedKeys={[buildingId]}
+                    onChange={handleBuildingChange}
                     placeholder="Select a building">
-                    {buildings.map((building) => (
-                        <SelectItem key={building._id} value={building._id}>
+                    {buildings.map((building:any) => (
+                        <SelectItem key={building.buildingId} value={building.buildingId}>
                             {building.name}
                         </SelectItem>
                     ))}
@@ -48,22 +93,6 @@ const LocationForm = (props: LocationFormProps) => {
                     placeholder="Enter the description of the building"
                     value={description}
                     onValueChange={setDescription} />
-
-
-                <div className={"flex flex-row gap-4"}>
-                    <Input
-                        label="Latitude"
-                        labelPlacement="outside"
-                        placeholder="Enter the latitude of the building"
-                        value={latitude.toString()}
-                        onValueChange={(value) => setLatitude(Number(value))}/>
-                    <Input
-                        label="Longitude"
-                        labelPlacement="outside"
-                        placeholder="Enter the longitude of the building"
-                        value={longitude.toString()}
-                        onValueChange={(value) => setLongitude(Number(value))}/>
-                </div>
 
                 <Input
                     isRequired

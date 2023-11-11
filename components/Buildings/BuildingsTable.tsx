@@ -27,7 +27,9 @@ export default function BuildingsTable() {
     const renderCell = (item: any, column: any) => {
         const cellValue = item[column.key];
 
-        const id = getKeyValue(item, '_id');
+        console.log(cellValue)
+
+        const id = getKeyValue(item, 'buildingId');
 
         switch (column.key) {
             case 'Action':

@@ -8,6 +8,7 @@ export interface LocationFormValues {
     longitude: number;
     floor: number;
     roomNumber: string;
+    buildingId: string;
 }
 
 const useAddLocation = () => {
@@ -27,6 +28,7 @@ const useAddLocation = () => {
                 },
                 floor: values.floor,
                 roomNumber: values.roomNumber,
+                buildingId: values.buildingId,
             });
 
             setIsLoading(false);
@@ -40,8 +42,12 @@ const useAddLocation = () => {
                 setError(new Error('An unknown error occurred'));
                 console.error('Failed to add location:', error);
             }
+
+            console.log(error);
         }
     };
 
-    return { addLocation, isLoading, error };
+    return { addLocation, isLoading, error, setError };
 };
+
+export default useAddLocation;

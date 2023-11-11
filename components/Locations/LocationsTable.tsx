@@ -19,12 +19,16 @@ import {
     ChipProps,
     SortDescriptor, Tooltip
 } from "@nextui-org/react";
-import {buildingsNames, columns, locations, statusOptions} from "./LocationsTableData";
+import {columns} from "./LocationsTableData";
 import {capitalize} from "./LocationsTableUtils";
 import {VerticalDotsIcon, ChevronDownIcon, PlusIcon, SearchIcon} from "@/components/icons";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import AddButton from "@/components/Locations/AddButton";
+import AddButton from "@/components/AddButton";
 import {Link} from "@nextui-org/link";
+import useGetLocations from "@/hooks/locations/useGetLocations";
+import Loading from "@/components/loading";
+import useGetBuildings from "@/hooks/buildings/useGetBuildings";
+import Building from "@/models/Building";
 
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "building.name", "floor", "roomNumber", "actions"];
@@ -40,16 +44,14 @@ const colors = [
     "info",
 ];
 
-const statusColorMap: Record<string, ChipProps["color"]> = buildingsNames.reduce(
-    (acc, name, index) => ({
-        ...acc,
-        [name]: colors[index % colors.length],
-    }),
-    {},
-);
-type Location = typeof locations[0];
-
 export default function LocationsTable() {
+
+    const {locations, isLoading, error} = useGetLocations();
+    const {buildings} = useGetBuildings();
+
+    console.log({buildings})
+
+    type Location = typeof locations[0];
 
     /** State **/
     const [filterValue, setFilterValue] = React.useState("");
@@ -73,22 +75,30 @@ export default function LocationsTable() {
         return columns.filter((column) => Array.from(visibleColumns).includes(column.id));
     }, [visibleColumns]);
 
+    const statusColorMap: Record<string, ChipProps["color"]> = buildings.reduce(
+        (acc, building:any, index) => ({
+            ...acc,
+            [building.name]: colors[index % colors.length],
+        }),
+        {},
+    );
+
     const filteredItems = React.useMemo(() => {
         let filteredLocations = [...locations];
 
         if (hasSearchFilter) {
-            filteredLocations = filteredLocations.filter((location) =>
+            filteredLocations = filteredLocations.filter((location:any) =>
                 location.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
         if (statusFilter !== "all") {
-            filteredLocations = filteredLocations.filter((location) =>
+            filteredLocations = filteredLocations.filter((location:any) =>
                 statusFilter.has(location.building.name)
             );
         }
 
         return filteredLocations;
-    }, [filterValue, statusFilter, hasSearchFilter]);
+    }, [filterValue, statusFilter, hasSearchFilter, locations]);
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
@@ -161,17 +171,12 @@ export default function LocationsTable() {
                 return (
                     <div>
                         <div className="hidden relative md:flex items-center gap-2">
-                            <Tooltip content="Details">
-                              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                <EyeIcon/>
-                              </span>
-                            </Tooltip>
-                            <Tooltip content="Edit user">
-                              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                            <Tooltip content="Edit">
+                              <Link className="text-lg text-default-400 cursor-pointer active:opacity-50" href={`/locations/${location._id}/edit`}>
                                 <EditIcon/>
-                              </span>
+                              </Link>
                             </Tooltip>
-                            <Tooltip color="danger" content="Delete user">
+                            <Tooltip color="danger" content="Delete">
                               <span className="text-lg text-danger cursor-pointer active:opacity-50">
                                 <DeleteIcon/>
                               </span>
@@ -185,7 +190,6 @@ export default function LocationsTable() {
                                     </Button>
                                 </DropdownTrigger>
                                 <DropdownMenu>
-                                    <DropdownItem>View</DropdownItem>
                                     <DropdownItem>Edit</DropdownItem>
                                     <DropdownItem>Delete</DropdownItem>
                                 </DropdownMenu>
@@ -253,9 +257,9 @@ export default function LocationsTable() {
                                 selectedKeys={statusFilter}
                                 selectionMode="multiple"
                                 onSelectionChange={setStatusFilter}>
-                                {statusOptions.map((status) => (
-                                    <DropdownItem key={status.label} className="capitalize">
-                                        {capitalize(status.value)}
+                                {buildings.map((building: any) => (
+                                    <DropdownItem key={building._id} className="capitalize">
+                                        {capitalize(building.name)}
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>
@@ -345,6 +349,11 @@ export default function LocationsTable() {
         [],
     );
 
+
+    if (isLoading) return (<Loading />);
+
+    if (error) return (<div>{error.message}</div>);
+
     return (
         <Table
             aria-label="Locations Table"
@@ -374,7 +383,7 @@ export default function LocationsTable() {
                 )}
             </TableHeader>
             <TableBody emptyContent={"No locations found"} items={sortedItems}>
-                {(item) => (
+                {(item:any) => (
                         <TableRow key={item.name}>
                             {(columnKey) => {
                                 return (<TableCell>{renderCell(item, columnKey)}</TableCell>)

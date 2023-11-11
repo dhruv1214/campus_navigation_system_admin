@@ -4,8 +4,6 @@ import axios from 'axios';
 export interface BuildingFormValues {
     name: string;
     description: string;
-    latitude: number;
-    longitude: number;
     imageURL: string;
 }
 
@@ -21,9 +19,6 @@ const useAddBuilding = () => {
             const response = await axios.post('http://localhost:8898/api/v1/buildings', {
                 name: values.name,
                 description: values.description,
-                location: {
-                    coordinates: [values.latitude, values.longitude],
-                },
                 imageURL: values.imageURL,
             });
 

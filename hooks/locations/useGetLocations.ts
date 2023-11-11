@@ -3,13 +3,15 @@ import axios from "axios";
 
 const useGetLocations = () => {
     const [locations, setLocations] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
+
     useEffect(() => {
+
         const fetchLocations = async () => {
+            setIsLoading(true);
             try {
-                // Use your API endpoint here
                 const response = await axios.get('http://localhost:8898/api/v1/locations');
                 setLocations(response.data);
                 setIsLoading(false);
@@ -29,3 +31,5 @@ const useGetLocations = () => {
 
     return {locations, isLoading, error};
 };
+
+export default useGetLocations;
