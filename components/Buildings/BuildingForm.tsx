@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import Building from "@/models/Building";
 import {Button, Input} from "@nextui-org/react";
-import {color} from "framer-motion";
 import {primaryButton, subtitle, title} from "@/components/primitives";
+import {BuildingFormValues} from "@/hooks/buildings/useAddBuiling";
 
 interface BuildingFormProps {
     building?: Building;
-    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: (formValues: BuildingFormValues) => void;
 }
 
 const BuildingForm = (props: BuildingFormProps) => {
@@ -17,14 +17,34 @@ const BuildingForm = (props: BuildingFormProps) => {
     const [longitude, setLongitude] = useState(props.building?.location.coordinates[1] || 0);
     const [imageURL, setImageURL] = useState(props.building?.imageURL || "");
 
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        // Validate the form values
+        if (!name || !description || !latitude || !longitude || !imageURL) {
+            return;
+        }
+
+        if (latitude < -90 || latitude > 90) {
+            return;
+        }
+
+        const formValues: BuildingFormValues = {
+            name,
+            description,
+            latitude,
+            longitude,
+            imageURL
+        };
+
+        props.onSubmit(formValues);
+    }
+
     return (
         <div className={"flex flex-col max-w-md mx-auto"}>
-
             <h1 className={title({color: 'pink'})}>{props.building ? "Edit Building" : "Add Building"}</h1>
             <span className={subtitle({fullWidth: true})}>Fill in the form below to {props.building ? "edit" : "add"} a building.</span>
-            <form onSubmit={props.onSubmit} className={"flex flex-col gap-4 mt-5"}>
-
-
+            <form onSubmit={handleSubmit} className={"flex flex-col gap-4 mt-5"}>
                 <Input
                     isRequired
                     label="Name"
@@ -43,14 +63,18 @@ const BuildingForm = (props: BuildingFormProps) => {
 
                 <div className={"flex flex-row gap-4"}>
                     <Input
+                        id="txtLatitude"
                         label="Latitude"
                         labelPlacement="outside"
                         placeholder="Enter the latitude of the building"
+                        type="number"
                         value={latitude.toString()}
                         onValueChange={(value) => setLatitude(Number(value))}/>
                     <Input
+                        id="txtLongitude"
                         label="Longitude"
                         labelPlacement="outside"
+                        type="number"
                         placeholder="Enter the longitude of the building"
                         value={longitude.toString()}
                         onValueChange={(value) => setLongitude(Number(value))}/>

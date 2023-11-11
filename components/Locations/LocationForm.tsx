@@ -1,18 +1,7 @@
 import React, {useState} from "react";
-import Building from "@/models/Building";
 import {Button, Input, Select, SelectItem, Textarea} from "@nextui-org/react";
-import {color} from "framer-motion";
 import {primaryButton, subtitle, title} from "@/components/primitives";
 import {buildings} from "@/components/Locations/LocationsTableData";
-
-// buildingId: string;
-//     name: string;
-//     description: string;
-//     floor: number;
-//     roomNumber: string;
-//     location: {
-//         coordinates: number[]
-//     };
 
 interface LocationFormProps {
     buildingLocation?: BuildingLocation;

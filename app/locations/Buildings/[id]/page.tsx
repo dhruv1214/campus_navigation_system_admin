@@ -3,8 +3,13 @@ import React from "react";
 import BuildingForm from "@/components/Buildings/BuildingForm";
 import {buildings} from "@/components/Locations/LocationsTableData";
 import Building from "@/models/Building";
+import { BuildingFormValues } from "@/hooks/buildings/useAddBuiling";
+import {useRouter} from "next/navigation";
+
 
 export default function Page({params}: { params: { id: string } }) {
+
+    const router = useRouter();
 
     const data = buildings.find(building => building._id === params.id);
 
@@ -19,7 +24,9 @@ export default function Page({params}: { params: { id: string } }) {
         data.imageURL
     );
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async  (formValues: BuildingFormValues) => {
+
+
     }
 
     return (

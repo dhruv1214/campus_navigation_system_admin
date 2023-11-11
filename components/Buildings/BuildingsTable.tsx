@@ -7,13 +7,13 @@ import {
     TableRow,
     TableCell,
     getKeyValue,
-    Tooltip,
-    Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem
+    Tooltip, Spinner,
 } from "@nextui-org/react";
-import {buildings} from "@/components/Locations/LocationsTableData";
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import {VerticalDotsIcon} from "@/components/icons";
+import {DeleteIcon, EditIcon} from "@nextui-org/shared-icons";
 import {Link} from "@nextui-org/link";
+import useGetBuildings from "@/hooks/buildings/useGetBuildings";
+import {useRouter} from "next/navigation";
+import Loading from "@/components/loading";
 
 const columns = [
     {key: 'name', label: 'Name'},
@@ -22,6 +22,7 @@ const columns = [
 ]
 
 export default function BuildingsTable() {
+    const { buildings, isLoading, error } = useGetBuildings();
 
     const renderCell = (item: any, column: any) => {
         const cellValue = item[column.key];
@@ -56,10 +57,12 @@ export default function BuildingsTable() {
 
     }
 
-    const handleEdit = (item: any) => {
-        console.log(item);
+    if (isLoading) {
+        return (<Loading />);
+    }
 
-
+    if (error) {
+        return <div>Error: {error.message}</div>
     }
 
     return (
@@ -68,7 +71,7 @@ export default function BuildingsTable() {
                 {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
             </TableHeader>
             <TableBody items={buildings}>
-                {(item) => (
+                {(item: any) => (
                     <TableRow key={item._id}>
                         {columns.map((column) => renderCell(item, column))}
                     </TableRow>
