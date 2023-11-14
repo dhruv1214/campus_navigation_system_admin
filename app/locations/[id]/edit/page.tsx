@@ -34,11 +34,13 @@ export default function Page({params}: { params: { id: string } }) {
     if (!location) return (<div>Location not found</div>);
 
     const buildingLocation:BuildingLocation = {
+        locationId: location.locationId,
         name: location.name,
         description: location.description,
         floor: location.floor,
         roomNumber: location.roomNumber,
-        buildingId: location.buildingId
+        buildingId: location.buildingId,
+        connectedLocations: location.connectedLocations
     }
 
     return (

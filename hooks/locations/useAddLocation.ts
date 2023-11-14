@@ -7,6 +7,7 @@ export interface LocationFormValues {
     floor: number;
     roomNumber: string;
     buildingId: string;
+    connectedLocations: string[];
 }
 
 const useAddLocation = () => {
@@ -24,6 +25,7 @@ const useAddLocation = () => {
                 floor: values.floor,
                 roomNumber: values.roomNumber,
                 buildingId: values.buildingId,
+                connectedLocations: values.connectedLocations,
             });
 
             setIsLoading(false);
