@@ -86,17 +86,41 @@ const useCreateEvent = () => {
     return {isLoading, error, setError,createEvent};
 }
 
-const useUpdateEvent = () => {
+const useUpdateEvent = (eventId: string) => {
     const [event, setEvent] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const updateEvent = async (eventId: string, eventData: any) => {
+
+    useEffect(() => {
+        const fetchEvent = async () => {
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:8898/api/v1/events/${eventId}`);
+                setEvent(response.data);
+                setIsLoading(false);
+            } catch (error) {
+                setIsLoading(false);
+                if (axios.isAxiosError(error)) {
+                    setError(error);
+                    console.error('Failed to add event:', error.message);
+                } else {
+                    setError(new Error('An unknown error occurred'));
+                    console.error('Failed to add event:', error);
+                }
+            }
+        };
+        fetchEvent();
+    }, [eventId]);
+
+    const updateEvent = async (eventData: any) => {
         setIsLoading(true);
         try {
+            console.log(eventData);
             const response = await axios.put(`http://localhost:8898/api/v1/events/${eventId}`, eventData);
-            setEvent(response.data);
             setIsLoading(false);
+            console.log(response.data);
+            return response.data;
         } catch (error) {
             setIsLoading(false);
             if (axios.isAxiosError(error)) {
@@ -109,7 +133,7 @@ const useUpdateEvent = () => {
         }
     };
 
-    return {event, isLoading, error, updateEvent};
+    return { isLoading, error, setError, updateEvent,event};
 }
 
 const useDeleteEvent = () => {

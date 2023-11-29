@@ -121,7 +121,7 @@ export default function EventsTable() {
                                             <Tooltip content="Edit">
                                                 <Link
                                                     className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                                                    href={`/locations/${item.id}/edit`}>
+                                                    href={`/events/${item.eventId}/edit`}>
                                                     <EditIcon/>
                                                 </Link>
                                             </Tooltip>

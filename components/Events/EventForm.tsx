@@ -56,7 +56,7 @@ const EventForm = (props: EventFormProps) => {
     return (
         <div className={"flex flex-col max-w-md mx-auto"}>
 
-            <h1 className={title({color: 'yellow'})}>{props.event ? "Edit Event" : "Add Event"}</h1>
+            <h1 className={title({color: 'green'})}>{props.event ? "Edit Event" : "Add Event"}</h1>
             <span
                 className={subtitle({fullWidth: true})}>Fill in the form below to {props.event ? "edit" : "add"} a building.</span>
 
@@ -105,7 +105,7 @@ const EventForm = (props: EventFormProps) => {
                     ))}
                 </Select>
 
-                <Button type="submit" className={primaryButton({color: "yellow"})}>
+                <Button type="submit" className={primaryButton({color: "green"})}>
                     {props.event ? "Edit" : "Add"}
                 </Button>
 
