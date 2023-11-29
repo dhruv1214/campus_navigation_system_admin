@@ -25,6 +25,7 @@ import {Link} from "@nextui-org/link";
 import {DeleteIcon, EditIcon} from "@nextui-org/shared-icons";
 import {PlusIcon} from "@/components/icons";
 import {useRouter} from "next/navigation";
+import Loading from "@/app/loading";
 
 
 const columns = [
@@ -86,6 +87,14 @@ export default function EventsTable() {
         );
     }, []);
 
+    if (isLoading) return (<Loading/>);
+
+    if (error) return (<div>Error...</div>);
+
+    if (!events) return (<div>No events found</div>);
+
+    if (events.length === 0) return (<div>No events found</div>);
+
     return (
         <Table
             aria-label="Events Table"
@@ -94,7 +103,7 @@ export default function EventsTable() {
                     wrapper: "after:bg-foreground after:text-background text-background",
                 },
             }}
-            selectedKeys={[]}
+selectedKeys={[]}
             selectionMode="none"
             topContent={topContent}
             topContentPlacement="outside">
@@ -112,7 +121,6 @@ export default function EventsTable() {
                 {(item: any) => (
                     <TableRow key={item.name}>
                         {(columnKey) => {
-
                             return (<TableCell>{
                                 columnKey === "actions" ? (
                                     <div className="flex gap-3 items-center">

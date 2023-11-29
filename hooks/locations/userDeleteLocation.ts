@@ -10,7 +10,7 @@ const useDeleteLocation = () => {
         setError(null);
 
         try {
-            await axios.delete(`http://localhost:8898/api/v1/locations/${id}`);
+            await axios.delete(`http://159.203.48.115:8898/api/v1/locations/${id}`);
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);

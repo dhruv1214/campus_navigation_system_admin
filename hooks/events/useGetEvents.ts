@@ -11,7 +11,7 @@ const useGetEvents = () => {
         const fetchEvents = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get('http://localhost:8898/api/v1/events');
+                const response = await axios.get('http://159.203.48.115:8898/api/v1/events');
                 setEvents(response.data);
                 setIsLoading(false);
             } catch (error) {
@@ -40,7 +40,7 @@ const useGetEvent = (eventId: string) => {
         const fetchEvent = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`http://localhost:8898/api/v1/events/${eventId}`);
+                const response = await axios.get(`http://159.203.48.115:8898/api/v1/events/${eventId}`);
                 setEvent(response.data);
                 setIsLoading(false);
             } catch (error) {
@@ -67,7 +67,7 @@ const useCreateEvent = () => {
     const createEvent = async (eventData: any) => {
         setIsLoading(true);
         try {
-            const response = await axios.post('http://localhost:8898/api/v1/events', eventData);
+            const response = await axios.post('http://159.203.48.115:8898/api/v1/events', eventData);
             setIsLoading(false);
 
             return response.data;
@@ -96,7 +96,7 @@ const useUpdateEvent = (eventId: string) => {
         const fetchEvent = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`http://localhost:8898/api/v1/events/${eventId}`);
+                const response = await axios.get(`http://159.203.48.115:8898/api/v1/events/${eventId}`);
                 setEvent(response.data);
                 setIsLoading(false);
             } catch (error) {
@@ -117,7 +117,7 @@ const useUpdateEvent = (eventId: string) => {
         setIsLoading(true);
         try {
             console.log(eventData);
-            const response = await axios.put(`http://localhost:8898/api/v1/events/${eventId}`, eventData);
+            const response = await axios.put(`http://159.203.48.115:8898/api/v1/events/${eventId}`, eventData);
             setIsLoading(false);
             console.log(response.data);
             return response.data;
@@ -144,7 +144,7 @@ const useDeleteEvent = () => {
     const deleteEvent = async (eventId: string) => {
         setIsLoading(true);
         try {
-            const response = await axios.delete(`http://localhost:8898/api/v1/events/${eventId}`);
+            const response = await axios.delete(`http://159.203.48.115:8898/api/v1/events/${eventId}`);
             setEvent(response.data);
             setIsLoading(false);
         } catch (error) {

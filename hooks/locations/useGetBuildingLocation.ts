@@ -5,7 +5,7 @@ const useGetLocations = () => {
 
     const fetchLocations = async (buildingId: string) => {
         try {
-            const response = await axios.get('http://localhost:8898/api/v1/locations/building/' + buildingId);
+            const response = await axios.get('http://159.203.48.115:8898/api/v1/locations/building/' + buildingId);
             return response.data;
         } catch (error) {
             return [];

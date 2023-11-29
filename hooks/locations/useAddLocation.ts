@@ -19,7 +19,7 @@ const useAddLocation = () => {
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:8898/api/v1/locations', {
+            const response = await axios.post('http://159.203.48.115:8898/api/v1/locations', {
                 name: values.name,
                 description: values.description,
                 floor: values.floor,

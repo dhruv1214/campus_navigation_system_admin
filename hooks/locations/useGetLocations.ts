@@ -12,7 +12,7 @@ const useGetLocations = () => {
         const fetchLocations = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get('http://localhost:8898/api/v1/locations');
+                const response = await axios.get('http://159.203.48.115:8898/api/v1/locations');
                 setLocations(response.data);
                 setIsLoading(false);
             } catch (error) {

@@ -10,7 +10,7 @@ const useGetBuildings = () => {
         const fetchBuildings = async () => {
             try {
                 // Use your API endpoint here
-                const response = await axios.get('http://localhost:8898/api/v1/buildings');
+                const response = await axios.get('http://159.203.48.115:8898/api/v1/buildings');
                 setBuildings(response.data);
                 setIsLoading(false);
             } catch (error) {

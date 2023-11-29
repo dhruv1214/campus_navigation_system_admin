@@ -12,7 +12,7 @@ const useDeleteBuilding = () => {
         console.log(id);
 
         try {
-            await axios.delete(`http://localhost:8898/api/v1/buildings/${id}`);
+            await axios.delete(`http://159.203.48.115:8898/api/v1/buildings/${id}`);
             setIsLoading(false);
             console.log("Deleted building");
         } catch (error) {
