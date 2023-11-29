@@ -2,7 +2,6 @@
 import React from "react";
 import BuildingForm from "@/components/Buildings/BuildingForm";
 import useAddBuilding, {BuildingFormValues} from "@/hooks/buildings/useAddBuiling";
-import {Spinner} from "@nextui-org/react";
 import {useRouter} from "next/navigation";
 import Loading from "@/components/loading";
 
@@ -30,7 +29,7 @@ export default function Page() {
     return (
         <div>
             <title>Add Building</title>
-            <BuildingForm onSubmit={handleSubmit} />
+            <BuildingForm  building={null} onSubmit={handleSubmit} />
         </div>
     );
 }

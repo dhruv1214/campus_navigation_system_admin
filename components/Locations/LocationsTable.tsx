@@ -28,11 +28,13 @@ import {Link} from "@nextui-org/link";
 import useGetLocations from "@/hooks/locations/useGetLocations";
 import Loading from "@/components/loading";
 import useGetBuildings from "@/hooks/buildings/useGetBuildings";
+import useDeleteLocation from "@/hooks/locations/userDeleteLocation";
 
 export default function LocationsTable() {
 
     const {locations, isLoading, error} = useGetLocations();
     const {buildings} = useGetBuildings();
+    const {deleteLocation, isLoading: deleteLoading, error: deleteError} = useDeleteLocation();
 
     type Location = typeof locations[0];
 
@@ -59,7 +61,7 @@ export default function LocationsTable() {
     }, [visibleColumns]);
 
     const statusColorMap: Record<string, ChipProps["color"]> = buildings.reduce(
-        (acc, building:any, index) => ({
+        (acc, building: any, index) => ({
             ...acc,
             [building.name]: colors[index % colors.length],
         }),
@@ -70,12 +72,12 @@ export default function LocationsTable() {
         let filteredLocations = [...locations];
 
         if (hasSearchFilter) {
-            filteredLocations = filteredLocations.filter((location:any) =>
+            filteredLocations = filteredLocations.filter((location: any) =>
                 location.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
         if (statusFilter !== "all") {
-            filteredLocations = filteredLocations.filter((location:any) =>
+            filteredLocations = filteredLocations.filter((location: any) =>
                 statusFilter.has(location.building.name)
             );
         }
@@ -155,14 +157,16 @@ export default function LocationsTable() {
                     <div>
                         <div className="hidden relative md:flex items-center gap-2">
                             <Tooltip content="Edit">
-                              <Link className="text-lg text-default-400 cursor-pointer active:opacity-50" href={`/locations/${location.locationId}/edit`}>
-                                <EditIcon/>
-                              </Link>
+                                <Link className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                                      href={`/locations/${location.locationId}/edit`}>
+                                    <EditIcon/>
+                                </Link>
                             </Tooltip>
                             <Tooltip color="danger" content="Delete">
-                              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                <DeleteIcon/>
-                              </span>
+                                <Button className="text-lg text-danger btn btn-danger cursor-pointer active:opacity-50"
+                                        onClick={() => onClickDelete(location.locationId)}>
+                                    <DeleteIcon/>
+                                </Button>
                             </Tooltip>
                         </div>
                         <div className="relative flex md:hidden justify-end items-center gap-2">
@@ -185,6 +189,11 @@ export default function LocationsTable() {
         }
     }, [statusColorMap]);
 
+
+    const onClickDelete = React.useCallback(async (locationId: string) => {
+        console.log(locationId);
+        await deleteLocation(locationId);
+    }, []);
 
     const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setRowsPerPage(Number(e.target.value));
@@ -269,7 +278,7 @@ export default function LocationsTable() {
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
-                       <AddButton />
+                        <AddButton/>
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -333,9 +342,11 @@ export default function LocationsTable() {
     );
 
 
-    if (isLoading) return (<Loading />);
+    if (isLoading || deleteLoading) return (<Loading/>);
 
     if (error) return (<div>{error.message}</div>);
+
+    if (deleteError) return (<div>{deleteError.message}</div>);
 
     return (
         <Table
@@ -366,13 +377,13 @@ export default function LocationsTable() {
                 )}
             </TableHeader>
             <TableBody emptyContent={"No locations found"} items={sortedItems}>
-                {(item:any) => (
-                        <TableRow key={item.name}>
-                            {(columnKey) => {
-                                return (<TableCell>{renderCell(item, columnKey)}</TableCell>)
-                            }}
-                        </TableRow>
-                    )
+                {(item: any) => (
+                    <TableRow key={item.name}>
+                        {(columnKey) => {
+                            return (<TableCell>{renderCell(item, columnKey)}</TableCell>)
+                        }}
+                    </TableRow>
+                )
                 }
             </TableBody>
         </Table>

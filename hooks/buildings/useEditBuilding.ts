@@ -1,6 +1,5 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {LocationFormValues} from "@/hooks/locations/useAddLocation";
 import {BuildingFormValues} from "@/hooks/buildings/useAddBuiling";
 import Building from "@/models/Building";
 
