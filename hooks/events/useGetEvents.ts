@@ -61,7 +61,6 @@ const useGetEvent = (eventId: string) => {
 }
 
 const useCreateEvent = () => {
-    const [event, setEvent] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
@@ -69,8 +68,9 @@ const useCreateEvent = () => {
         setIsLoading(true);
         try {
             const response = await axios.post('http://localhost:8898/api/v1/events', eventData);
-            setEvent(response.data);
             setIsLoading(false);
+
+            return response.data;
         } catch (error) {
             setIsLoading(false);
             if (axios.isAxiosError(error)) {
@@ -83,7 +83,7 @@ const useCreateEvent = () => {
         }
     };
 
-    return {event, isLoading, error, createEvent};
+    return {isLoading, error, setError,createEvent};
 }
 
 const useUpdateEvent = () => {

@@ -20,7 +20,7 @@ import {
     SortDescriptor, Tooltip
 } from "@nextui-org/react";
 import {columns, colors, INITIAL_VISIBLE_COLUMNS} from "./LocationsTableData";
-import {capitalize} from "./LocationsTableUtils";
+import {capitalize} from "../TableUtils";
 import {VerticalDotsIcon, ChevronDownIcon, SearchIcon} from "@/components/icons";
 import {DeleteIcon, EditIcon} from "@nextui-org/shared-icons";
 import AddButton from "@/components/AddButton";
@@ -110,7 +110,6 @@ export default function LocationsTable() {
 
 
         if (columnKey.includes('.')) {
-            // Handle nested properties, e.g. building.name
             const keys = columnKey.split('.');
             cellValue = location[keys[0]][keys[1]];
         } else {
